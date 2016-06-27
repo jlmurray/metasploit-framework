@@ -7,7 +7,7 @@ require 'msf/core'
 require 'metasploit/framework/login_scanner/smb'
 require 'metasploit/framework/credential_collection'
 
-class Metasploit3 < Msf::Auxiliary
+class MetasploitModule < Msf::Auxiliary
 
   include Msf::Exploit::Remote::DCERPC
   include Msf::Exploit::Remote::SMB::Client
@@ -85,15 +85,14 @@ class Metasploit3 < Msf::Auxiliary
       smb_native_os: datastore['SMB::Native_OS'],
       smb_native_lm: datastore['SMB::Native_LM'],
       send_spn: datastore['NTLM::SendSPN'],
-      host: ip
     )
 
     bogus_result = @scanner.attempt_bogus_login(domain)
     if bogus_result.success?
       if bogus_result.access_level == Metasploit::Framework::LoginScanner::SMB::AccessLevels::GUEST
-        print_status("#{ip} - This system allows guest sessions with any credentials")
+        print_status("This system allows guest sessions with any credentials")
       else
-        print_error("#{ip} - This system accepts authentication with any credentials, brute force is ineffective.")
+        print_error("This system accepts authentication with any credentials, brute force is ineffective.")
         return
       end
     end
